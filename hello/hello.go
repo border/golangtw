@@ -33,6 +33,15 @@ func get(w http.ResponseWriter, r *http.Request) {
         return
     }
     fmt.Fprintf(w, "HTTP Get returned status %v", req.Status)
+    for k, v := range req.Header {
+        for _, vv := range v {
+            w.Header().Add(k, vv)
+            fmt.Printf("Key:%v, Value:%v\n", k, vv)
+        }
+    }
+    for _, c := range req.SetCookie {
+        w.Header().Add("Set-Cookie", c.Raw)
+    }
     body, _ := ioutil.ReadAll(req.Body)
     defer req.Body.Close()
     fmt.Fprintf(w, "%v", string(body))
