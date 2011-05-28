@@ -2,11 +2,14 @@ package hello
 
 import (
     "appengine"
+    "appengine/urlfetch"
     "appengine/datastore"
     "appengine/user"
     "http"
+    "io/ioutil"
     "template"
     "time"
+    "fmt"
 )
 
 type Greeting struct {
@@ -18,6 +21,21 @@ type Greeting struct {
 func init() {
     http.HandleFunc("/", root)
     http.HandleFunc("/sign", sign)
+    http.HandleFunc("/get", get)
+}
+
+func get(w http.ResponseWriter, r *http.Request) {
+    c := appengine.NewContext(r)
+    client := urlfetch.Client(c)
+    req, _, err := client.Get("http://www.google.com/")
+    if err != nil {
+        http.Error(w, err.String(), http.StatusInternalServerError)
+        return
+    }
+    fmt.Fprintf(w, "HTTP Get returned status %v", req.Status)
+    body, _ := ioutil.ReadAll(req.Body)
+    defer req.Body.Close()
+    fmt.Fprintf(w, "%v", string(body))
 }
 
 func root(w http.ResponseWriter, r *http.Request) {
