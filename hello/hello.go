@@ -27,12 +27,15 @@ func init() {
 func get(w http.ResponseWriter, r *http.Request) {
     c := appengine.NewContext(r)
     client := urlfetch.Client(c)
-    req, _, err := client.Get("http://www.google.com/")
+
+    httpRequest, _ := http.NewRequest("GET", "http://www.sina.com.cn", nil)
+    httpRequest.Header.Set("Content-Type", "text/html; charset=utf-8")
+
+    req, err := client.Do(httpRequest)
     if err != nil {
         http.Error(w, err.String(), http.StatusInternalServerError)
         return
     }
-    fmt.Fprintf(w, "HTTP Get returned status %v", req.Status)
     for k, v := range req.Header {
         for _, vv := range v {
             w.Header().Add(k, vv)
