@@ -28,18 +28,20 @@ func get(w http.ResponseWriter, r *http.Request) {
     c := appengine.NewContext(r)
     client := urlfetch.Client(c)
 
-    httpRequest, _ := http.NewRequest("GET", "http://www.sina.com.cn", nil)
+    url := "http://www.yahoo.com/"
+    httpRequest, _ := http.NewRequest("GET", url, nil)
     httpRequest.Header.Set("Content-Type", "text/html; charset=utf-8")
+    httpRequest.UserAgent = "Mozilla/5.0 (X11; Linux i686) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.57 Safari/534.24,gzip(gfe)"
 
     req, err := client.Do(httpRequest)
     if err != nil {
         http.Error(w, err.String(), http.StatusInternalServerError)
         return
     }
+    c.Logf("HTTP Get %v returned status %v", url, req.Status)
     for k, v := range req.Header {
         for _, vv := range v {
             w.Header().Add(k, vv)
-            fmt.Printf("Key:%v, Value:%v\n", k, vv)
         }
     }
     for _, c := range req.SetCookie {
