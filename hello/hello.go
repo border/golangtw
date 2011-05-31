@@ -22,6 +22,11 @@ func init() {
     http.HandleFunc("/", root)
     http.HandleFunc("/sign", sign)
     http.HandleFunc("/get", get)
+    http.HandleFunc("/google4a30971798e895bc.html", google)
+}
+
+func google(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprint(w, "google-site-verification: google4a30971798e895bc.html")
 }
 
 func get(w http.ResponseWriter, r *http.Request) {
