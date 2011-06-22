@@ -45,7 +45,7 @@ func get(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    c.Logf("HTTP Get %v returned status %v", url, req.Status)
+    c.Infof("HTTP Get %v returned status %v", url, req.Status)
 
     for k, v := range req.Header {
         for _, vv := range v {
@@ -96,6 +96,13 @@ const guestbookTemplateHTML = `
       <div><input type="text" name="URL" size="50"></input></div>
       <div><input type="submit" value="Http Proxy"></div>
     </form>
+    <p></p>
+    <div><a href="http://code.google.com/appengine/docs/go/">
+    <img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" 
+    alt="Powered by Google App Engine" />
+    </a>
+    </div>
+
   </body>
 </html>
 `
