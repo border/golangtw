@@ -1,0 +1,27 @@
+<html>
+  <body>
+    {.repeated section @}
+      {.section Author}
+      <p><b>{@|html}</b> wrote:</p>
+      {.or}
+        <p>An anonymous person wrote:</p>
+      {.end}
+      <pre>{Content|html}</pre>
+    {.end}
+    <form action="/sign" method="post">
+      <div><textarea name="content" rows="3" cols="60"></textarea></div>
+      <div><input type="submit" value="Sign Guestbook"></div>
+    </form>
+    <form action="/get" method="post">
+      <div><input type="text" name="URL" size="50"></input></div>
+      <div><input type="submit" value="Http Proxy"></div>
+    </form>
+    <p></p>
+    <div><a href="http://appengine.google.com/">
+    <img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" 
+    alt="Powered by Google App Engine" />
+    </a>
+    </div>
+  </body>
+  <script type="text/javascript" src="/static/js/google-analytics.js"></script>
+</html>

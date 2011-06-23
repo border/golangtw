@@ -18,6 +18,10 @@ type Greeting struct {
 	Date    datastore.Time
 }
 
+var (
+	indexTemplate = template.MustParseFile("index.html", nil)
+)
+
 func init() {
 	http.HandleFunc("/", root)
 	http.HandleFunc("/sign", sign)
@@ -70,53 +74,11 @@ func root(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.String(), http.StatusInternalServerError)
 		return
 	}
-	if err := guestbookTemplate.Execute(w, greetings); err != nil {
+
+	if err := indexTemplate.Execute(w, greetings); err != nil {
 		http.Error(w, err.String(), http.StatusInternalServerError)
 	}
 }
-
-var guestbookTemplate = template.MustParse(guestbookTemplateHTML, nil)
-
-const guestbookTemplateHTML = `
-<html>
-  <body>
-    {.repeated section @}
-      {.section Author}
-        <p><b>{@|html}</b> wrote:</p>
-      {.or}
-        <p>An anonymous person wrote:</p>
-      {.end}
-      <pre>{Content|html}</pre>
-    {.end}
-    <form action="/sign" method="post">
-      <div><textarea name="content" rows="3" cols="60"></textarea></div>
-      <div><input type="submit" value="Sign Guestbook"></div>
-    </form>
-    <form action="/get" method="post">
-      <div><input type="text" name="URL" size="50"></input></div>
-      <div><input type="submit" value="Http Proxy"></div>
-    </form>
-    <p></p>
-    <div><a href="http://code.google.com/appengine/docs/go/">
-    <img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" 
-    alt="Powered by Google App Engine" />
-    </a>
-    </div>
-  </body>
-  <script type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-359846-8']);
-      _gaq.push(['_setDomainName', '.wifihack.net']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-       })();
-</script>
-</html>
-`
 
 func sign(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
