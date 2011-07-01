@@ -33,6 +33,7 @@ func init() {
     http.HandleFunc("/file", util.File)
     http.HandleFunc("/sina", util.TokenSina)
     http.HandleFunc("/callback-sina", util.CallbackSina)
+    http.HandleFunc("/PublicTimeLineSina", util.PublicTimeLineSina)
 }
 
 func get(w http.ResponseWriter, r *http.Request) {
