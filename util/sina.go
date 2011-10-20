@@ -41,7 +41,7 @@ func TokenSina(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    consumer := oauth.NewConsumer(c, atoken.Token, atoken.Secret, provider)
+    consumer := oauth.NewConsumer(atoken.Token, atoken.Secret, provider)
     atoken.Token = AuthToken
     atoken.Secret = AuthSecret
     if atoken.Token == "" || atoken.Secret == "" {
@@ -77,7 +77,7 @@ func PublicTimeLineSina(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    consumer := oauth.NewConsumer(c, atoken.Token, atoken.Secret, provider)
+    consumer := oauth.NewConsumer(atoken.Token, atoken.Secret, provider)
 
     //const url = "http://api.twitter.com/1/statuses/mentions.json"
     const url = "http://api.t.sina.com.cn/statuses/public_timeline.json"
@@ -110,7 +110,7 @@ func CallbackSina(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    consumer := oauth.NewConsumer(c, atoken.Token, atoken.Secret, provider)
+    consumer := oauth.NewConsumer(atoken.Token, atoken.Secret, provider)
     var rtoken oauth.RequestToken
 
     rtoken.Token = RequestToken

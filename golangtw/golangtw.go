@@ -23,7 +23,7 @@ type Greeting struct {
 }
 
 var (
-    indexTemplate = template.MustParseFile("index.html", nil)
+    indexTemplate = template.Must(template.ParseFile("index.html"))
 )
 
 func init() {
@@ -44,7 +44,8 @@ func get(w http.ResponseWriter, r *http.Request) {
 
     httpRequest, _ := http.NewRequest("GET", url, nil)
     httpRequest.Header.Set("Content-Type", "text/html; charset=utf-8")
-    httpRequest.UserAgent = "Mozilla/5.0 (X11; Linux i686) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.57 Safari/534.24,gzip(gfe)"
+    //httpRequest.UserAgent = "Mozilla/5.0 (X11; Linux i686) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.57 Safari/534.24,gzip(gfe)"
+    httpRequest.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux i686) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.57 Safari/534.24,gzip(gfe)")
 
     req, err := client.Do(httpRequest)
     if err != nil {
@@ -60,7 +61,7 @@ func get(w http.ResponseWriter, r *http.Request) {
         }
     }
 
-    for _, c := range req.SetCookie {
+    for _, c := range req.Cookies() {
         w.Header().Add("Set-Cookie", c.Raw)
     }
 
@@ -92,7 +93,7 @@ func sign(w http.ResponseWriter, r *http.Request) {
     if u := user.Current(c); u != nil {
         g.Author = u.String()
     }
-    _, err := datastore.Put(c, datastore.NewIncompleteKey("Greeting"), &g)
+    _, err := datastore.Put(c, datastore.NewIncompleteKey(c, "Greeting", nil), &g)
     if err != nil {
         http.Error(w, err.String(), http.StatusInternalServerError)
         return
