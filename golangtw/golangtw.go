@@ -40,7 +40,7 @@ func get(w http.ResponseWriter, r *http.Request) {
     c := appengine.NewContext(r)
     client := urlfetch.Client(c)
 
-    url := r.FormValue("URL") + "/"
+    url := r.FormValue("URL")
 
     httpRequest, _ := http.NewRequest("GET", url, nil)
     httpRequest.Header.Set("Content-Type", "text/html; charset=utf-8")
