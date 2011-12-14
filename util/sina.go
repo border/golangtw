@@ -30,7 +30,6 @@ var (
     Code          string = ""
 )
 
-
 func TokenSina(w http.ResponseWriter, r *http.Request) {
     c := appengine.NewContext(r)
 
