@@ -52,15 +52,7 @@ func get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if len(url) > 5 {
-		prefix := strings.ToLower(url[0:5])
-		if !strings.HasPrefix(prefix, "http") && !strings.HasPrefix(prefix, "http") {
-			url = fmt.Sprintf("http://%s", url)
-		}
-
-	} else {
-		url = fmt.Sprintf("http://%s", url)
-	}
+    url = util.CheckUrlPrefix(url)
 
 	switch r.Method {
 	default:

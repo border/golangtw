@@ -6,6 +6,7 @@ format:
 	${GOFMT} -w golangtw/golangtw.go
 	${GOFMT} -w util/util.go
 	${GOFMT} -w util/sina.go
+	${GOFMT} -w util/proxy.go
 
 
 
