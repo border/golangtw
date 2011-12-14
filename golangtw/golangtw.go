@@ -10,6 +10,7 @@ import (
     "template"
     "time"
     "fmt"
+    "strings"
 )
 
 import (
@@ -37,14 +38,45 @@ func init() {
 }
 
 func get(w http.ResponseWriter, r *http.Request) {
+
+    var httpRequest *http.Request
+
     c := appengine.NewContext(r)
     client := urlfetch.Client(c)
 
-    url := r.FormValue("URL")
+    url := r.FormValue("url")
+    url = strings.TrimSpace(url)
 
-    httpRequest, _ := http.NewRequest("GET", url, nil)
+    if url == "" {
+        http.Redirect(w, r, "/", http.StatusFound)
+        return
+    }
+
+    if len(url) > 5 {
+        prefix := strings.ToLower(url[0:5])
+        if !strings.HasPrefix(prefix, "http") && !strings.HasPrefix(prefix, "http") {
+            url = fmt.Sprintf("http://%s", url)
+        }
+
+    } else {
+        url = fmt.Sprintf("http://%s", url)
+    }
+
+    switch r.Method {
+        default: {
+            fmt.Fprintf(w, "Cannot handle method %v", r.Method)
+            http.Error(w, "501 I only handle GET and POST", http.StatusNotImplemented)
+            return
+        }
+        case "GET": {
+            httpRequest, _ = http.NewRequest("GET", url, nil)
+        }
+        case "POST": {
+            httpRequest, _ = http.NewRequest("POST", url, nil)
+        }
+    }
+
     httpRequest.Header.Set("Content-Type", "text/html; charset=utf-8")
-    //httpRequest.UserAgent = "Mozilla/5.0 (X11; Linux i686) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.57 Safari/534.24,gzip(gfe)"
     httpRequest.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux i686) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.57 Safari/534.24,gzip(gfe)")
 
     req, err := client.Do(httpRequest)
